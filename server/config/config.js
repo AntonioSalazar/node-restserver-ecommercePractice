@@ -27,7 +27,7 @@ let dbURL;
 
     dbURL = 'mongodb://localhost:27017/ecommerceTest'
 } else{
-    dbURL = 'mongodb://admin:superadmin1@ds131531.mlab.com:31531/ecommercedb'
+    dbURL = MONGO_URL
 }
 
 

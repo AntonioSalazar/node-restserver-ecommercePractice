@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
+const { verifyToken, verifyAdmin_Role } = require('../middleware/authentication')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 
@@ -7,7 +8,9 @@ const app = express()
 
 
 
-app.get('/users', function (req, res) {
+app.get('/users', verifyToken, (req, res) => {
+
+
 
     let since = req.query.since || 0;
     since = Number(since)
@@ -39,7 +42,7 @@ app.get('/users', function (req, res) {
 
 
   
-app.post('/user', function (req, res) {
+app.post('/user', [verifyToken, verifyAdmin_Role],(req, res) => {
     let body = req.body
 
    let user = new User({
@@ -65,7 +68,7 @@ app.post('/user', function (req, res) {
         
 })
   
-app.put('/user/:id', function (req, res) {
+app.put('/user/:id', [verifyToken, verifyAdmin_Role], (req, res) =>{
       
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'email', 'role', 'img', 'status']);
@@ -90,7 +93,7 @@ app.put('/user/:id', function (req, res) {
 
 /// Deleting a user from DB 
 
-app.delete('/user/:id', function (req, res) {
+app.delete('/user/:id', [verifyToken, verifyAdmin_Role],  (req, res) =>{
    
     let id = req.params.id;
     let changeStatus = {
